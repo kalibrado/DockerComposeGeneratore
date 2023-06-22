@@ -3,19 +3,19 @@
 #  FUNCTIONS
 # ========================================================
 function header {
-    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
-    printf " %s " "$(echo "$1" | tr '[:lower:]' '[:upper:]')"
-    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
-    echo " "
+  printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+  printf " %s " "$(echo "$1" | tr '[:lower:]' '[:upper:]')"
+  printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+  echo " "
 }
 function get_ip {
-    localhost=$(hostname -I | cut -d ' ' -f1)
-    echo "$localhost"
+  localhost=$(hostname -I | cut -d ' ' -f1)
+  echo "$localhost"
 }
 function ask {
-    read -r -p "  -> $1 : " user_res
-    local res=${user_res:-"$2"}
-    echo "$res"
+  read -r -p "  -> $1 : " user_res
+  local res=${user_res:-"$2"}
+  echo "$res"
 }
 # ========================================================
 #  START SCRIPTS
