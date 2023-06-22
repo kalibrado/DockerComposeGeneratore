@@ -1,6 +1,25 @@
 #!/usr/bin/env bash
-source "$PWD/bin/global.sh"
-
+# ========================================================
+#  FUNCTIONS
+# ========================================================
+function header {
+    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+    printf " %s " "$(echo "$1" | tr '[:lower:]' '[:upper:]')"
+    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+    echo " "
+}
+function get_ip {
+    localhost=$(hostname -I | cut -d ' ' -f1)
+    echo "$localhost"
+}
+function ask {
+    read -r -p "  -> $1 : " user_res
+    local res=${user_res:-"$2"}
+    echo "$res"
+}
+# ========================================================
+#  START SCRIPTS
+# ========================================================
 localhost=$(get_ip)
 
 header "Proxy Manager "
@@ -17,7 +36,7 @@ cd "${DATA_DIR}" || exit
 mkdir -p ./certs
 mkdir -p ./data
 
-section "Create ${DATA_DIR}/docker-compose.yml"
+echo "Create ${DATA_DIR}/docker-compose.yml"
 
 cat <<EOF >./docker-compose.yml
 version: '3.7'
@@ -56,9 +75,9 @@ services:
       - ./data/mysql:/var/lib/mysql
 EOF
 
-section "Create docker network bridge nginx-proxy-manager"
+echo "Create docker network bridge nginx-proxy-manager"
 docker network create --driver bridge nginx-proxy-manager
 
-ask_run "Default Proxy Manager username: admin@example.com" \
-  "Default Proxy Manager password: changeme" \
-  "Access to proxy-manager => http://${localhost}:${HTTP_DASHBOARD}"
+echo "Default Proxy Manager username: admin@example.com" 
+echo "Default Proxy Manager password: changeme" 
+echo "Access to proxy-manager => http://${localhost}:${HTTP_DASHBOARD}"

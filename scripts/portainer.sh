@@ -1,6 +1,25 @@
 #!/usr/bin/env bash
-source "$PWD/bin/global.sh"
-
+# ========================================================
+#  FUNCTIONS
+# ========================================================
+function header {
+    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+    printf " %s " "$(echo "$1" | tr '[:lower:]' '[:upper:]')"
+    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+    echo " "
+}
+function get_ip {
+    localhost=$(hostname -I | cut -d ' ' -f1)
+    echo "$localhost"
+}
+function ask {
+    read -r -p "  -> $1 : " user_res
+    local res=${user_res:-"$2"}
+    echo "$res"
+}
+# ========================================================
+#  START SCRIPTS
+# ========================================================
 localhost=$(get_ip)
 
 header "PORTAINER"
@@ -13,7 +32,7 @@ mkdir -p "${DATA_DIR}"
 cd "${DATA_DIR}" || exit
 mkdir -p ./data
 
-section "Create ${DATA_DIR}/docker-compose.yml"
+echo "Create ${DATA_DIR}/docker-compose.yml"
 
 cat <<EOF >./docker-compose.yml
 version: '3.7'
@@ -35,8 +54,7 @@ services:
       - ./data:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
-
 EOF
 
-ask_run "Access to portainer => https://${localhost}:${HTTPS_PORT}" \
-  "Access to portainer => https://${localhost}:${HTTPS_PORT}"
+echo "Access to portainer => https://${localhost}:${HTTPS_PORT}"
+echo "Access to portainer => https://${localhost}:${HTTPS_PORT}"

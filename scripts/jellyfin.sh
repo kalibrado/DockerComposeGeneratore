@@ -1,35 +1,45 @@
 #!/usr/bin/env bash
-
-source "$PWD/bin/global.sh"
+# ========================================================
+#  FUNCTIONS
+# ========================================================
+function header {
+    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+    printf " %s " "$(echo "$1" | tr '[:lower:]' '[:upper:]')"
+    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+    echo " "
+}
+function get_ip {
+    localhost=$(hostname -I | cut -d ' ' -f1)
+    echo "$localhost"
+}
+function ask {
+    read -r -p "  -> $1 : " user_res
+    local res=${user_res:-"$2"}
+    echo "$res"
+}
+# ========================================================
+#  START SCRIPTS
+# ========================================================
 
 localhost=$(get_ip)
 
 header "Jellyfin"
 
 DATA_DIR=$(ask "Path for data (default: ./app/Jellyfin)" "./app/Jellyfin")
-
-create_docker_user
-
 mkdir -p "${DATA_DIR}"
 cd "${DATA_DIR}" || exit
 mkdir -p ./config
 mkdir -p ./cache
 mkdir -p ./media
 
-# Vérification du chemin d'accès pour les données
-if [[ ! -d "$DATA_DIR" ]]; then
-  error_response "Data directory does not exist"
-  exit 1
-fi
-
 PORT=$(ask "HTTP port (default: 8096)" "8096")
 # Vérification du numéro de port
 if [[ ! "$PORT" =~ ^[0-9]+$ ]]; then
-  error_response "Invalid port number"
+  echo "Invalid port number"
   exit 1
 fi
 
-section "Create ${DATA_DIR}/docker-compose.yml"
+echo "Create ${DATA_DIR}/docker-compose.yml"
 
 cat <<EOF >./docker-compose.yml
 version: '3.7'
@@ -45,26 +55,9 @@ services:
       - ./media:/media
     user: docker
     restart: 'unless-stopped'
-
 EOF
 
-# Confirmation de la création du conteneur
-while true; do
-  response=$(ask "Do you want to continue and start Jellyfin? (y/n)")
-  case $response in
-  [yY])
-    ask_run "If you need to add external media" \
-      "ex: sudo mkdir ${DATA_DIR}/media/disk1" \
-      "ex: sudo mount /dev/sdX ${DATA_DIR}/media/disk1" \
-      "Access Jellyfin at http://${localhost}:${PORT}"
-    break
-    ;;
-  [nN])
-    divider
-    exit 0
-    ;;
-  *)
-    error_response 'Type yY or nN'
-    ;;
-  esac
-done
+echo "If you need to add external media"
+echo "ex: sudo mkdir ${DATA_DIR}/media/disk1"
+echo "ex: sudo mount /dev/sdX ${DATA_DIR}/media/disk1"
+echo "Access Jellyfin at http://${localhost}:${PORT}"

@@ -1,6 +1,29 @@
 #!/usr/bin/env bash
-source "$PWD/bin/global.sh"
-
+# ========================================================
+#  FUNCTIONS
+# ========================================================
+function header {
+    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+    printf " %s " "$(echo "$1" | tr '[:lower:]' '[:upper:]')"
+    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+    echo " "
+}
+function get_ip {
+    localhost=$(hostname -I | cut -d ' ' -f1)
+    echo "$localhost"
+}
+function ask {
+    read -r -p "  -> $1 : " user_res
+    local res=${user_res:-"$2"}
+    echo "$res"
+}
+function get_locale {
+    locale=$(locale | grep -i LANG= | cut -d '=' -f2 | cut -d '.' -f1)
+    echo "$locale"
+}
+# ========================================================
+#  START SCRIPTS
+# ========================================================
 localhost=$(get_ip)
 locale=$(get_locale)
 
@@ -24,9 +47,8 @@ mkdir -p "${DATA_DIR}"
 cd "${DATA_DIR}"/ || exit
 mkdir -p ./data
 mkdir -p ./config
-echo
-section "OPcache config optimal"
 
+echo "OPcache config optimal"
 cat <<EOF >./php-opcache.ini
     opcache.enable=1
     opcache.enable_cli=1
@@ -38,8 +60,8 @@ cat <<EOF >./php-opcache.ini
     opcache.jit=1255
     opcache.jit_buffer_size = 128M
 EOF
-echo
-section "Create script for optimisation nextcloud in ${DATA_DIR}/nextcloud_opti_conf.sh"
+
+echo "Create script for optimisation nextcloud in ${DATA_DIR}/nextcloud_opti_conf.sh"
 cat <<EOF >./nextcloud_opti_conf.sh
 #!/usr/bin/env bash
 function occ {
@@ -109,8 +131,7 @@ occ preview:pre-generate
 occ preview:generate-all -vvv
 EOF
 
-echo
-
+echo "Create ${DATA_DIR}/docker-compose.yml"
 cat <<EOF >./docker-compose.yml
 version: '3.7'
 services:
@@ -169,8 +190,6 @@ function create_reverse_proxy {
   DOMAIN_NAME=$(ask "Domaine name")
 
   mkdir -p ./proxy
-
-  section "Create ${DATA_DIR}/docker-compose.yml"
 
   cat <<EOF >>./docker-compose.yml
   proxy:
@@ -250,12 +269,12 @@ volumes:
   db:
   nextcloud:
 EOF
-  ask_run "Access to nextcloud => https://${DOMAIN_NAME}:${HTTPS}" \
-    "If you need optimisation for nextcloud use this commande ${DATA_DIR}/nextcloud_opti_conf.sh"
+  echo "Access to nextcloud => https://${DOMAIN_NAME}:${HTTPS}"
+  echo  "If you need optimisation for nextcloud use this commande ${DATA_DIR}/nextcloud_opti_conf.sh"
 }
 
 function create {
-  section "Create ${DATA_DIR}/docker-compose.yml"
+  echo "Create ${DATA_DIR}/docker-compose.yml"
 
   cat <<EOF >>./docker-compose.yml
   # NextCloud
@@ -297,13 +316,13 @@ volumes:
   db:
   nextcloud:
 EOF
-  ask_run "Access to nextcloud => http://${DOMAIN_NAME}:${HTTP}" \
-    "If you need optimisation for nextcloud use this commande ${DATA_DIR}/nextcloud_opti_conf.sh"
+  echo "Access to nextcloud => http://${DOMAIN_NAME}:${HTTP}"
+  echo "If you need optimisation for nextcloud use this commande ${DATA_DIR}/nextcloud_opti_conf.sh"
 
 }
 
 while true; do
-  action "docker network create --driver bridge nextcloud"
+  docker network create --driver bridge nextcloud
   response=$(ask "Use reverse proxy and let's encrypt for auto generate ssl certificat (y/n)")
   case $response in
   [yY])

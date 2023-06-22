@@ -1,6 +1,25 @@
 #!/usr/bin/env bash
-source "$PWD/bin/global.sh"
-
+# ========================================================
+#  FUNCTIONS
+# ========================================================
+function header {
+    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+    printf " %s " "$(echo "$1" | tr '[:lower:]' '[:upper:]')"
+    printf "=%.0s" $(seq 1 "$(expr "$(tput cols)" / 4)")
+    echo " "
+}
+function get_ip {
+    localhost=$(hostname -I | cut -d ' ' -f1)
+    echo "$localhost"
+}
+function ask {
+    read -r -p "  -> $1 : " user_res
+    local res=${user_res:-"$2"}
+    echo "$res"
+}
+# ========================================================
+#  START SCRIPTS
+# ========================================================
 header "Duck DNS"
 
 DATA_DIR=$(ask "Path for data default(./app/DuckDns)" "./app/DuckDns")
@@ -9,7 +28,7 @@ TOKEN=$(ask "Duck dns token")
 
 # Validate token
 if ! curl --fail --silent --show-error "https://www.duckdns.org/update?domains=${SUBDOMAINS}&token=${TOKEN}&verbose=true"; then
-  error_response "Invalid Duck DNS token"
+  echo "Invalid Duck DNS token"
   exit 1
 fi
 
@@ -17,7 +36,7 @@ mkdir -p "${DATA_DIR}"
 cd "${DATA_DIR}" || exit
 mkdir -p ./data
 
-section "Create ${DATA_DIR}/docker-compose.yml"
+echo "Create ${DATA_DIR}/docker-compose.yml"
 
 cat <<EOF >./docker-compose.yml
 version: '3.7'
@@ -34,7 +53,4 @@ services:
       - ./config:/config 
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
-
 EOF
-
-ask_run
