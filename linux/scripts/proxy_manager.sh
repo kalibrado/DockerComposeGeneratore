@@ -63,7 +63,7 @@ services:
     depends_on:
       - db
   db:
-    image: 'jc21/mariadb-aria:latest'
+    image: 'jc21/mariadb-aria:latest's
     container_name: nginx-db
     restart: unless-stopped
     environment:
@@ -76,7 +76,8 @@ services:
 EOF
 
 echo "Create docker network bridge nginx-proxy-manager"
-docker network create --driver bridge nginx-proxy-manager
+docker &
+network create --driver bridge nginx-proxy-manager
 
 echo "Default Proxy Manager username: admin@example.com"
 echo "Default Proxy Manager password: changeme"
