@@ -1,9 +1,9 @@
-# Générateur de Docker Compose
+# Docker Compose generator
 
-Ce script prépare un environnement Linux pour accueillir des containers Docker en installant toutes les dépendances nécessaires au bon fonctionnement de Docker.
-Une fois l'environnement préparé, le script propose de générer plusieurs fichiers "docker compose" préconfigurés et de les lancer automatiquement pour créer rapidement des containers.
+This script prepares a Linux environment to host Docker containers by installing all the dependencies necessary for Docker to function properly.
+Once the environment is prepared, the script generates several preconfigured "docker compose" files and launches them automatically to quickly create containers.
 
-## Containers disponibles
+## Containers available
 
 - AdGuard
 - Duck DNS
@@ -11,39 +11,39 @@ Une fois l'environnement préparé, le script propose de générer plusieurs fic
 - Minecraft
 - Nextcloud
 - Portainer
-- Proxy Manager Nginx
-- Rocket.chat.io (en cours de développement)
+- Nginx Proxy Manager
+- Rocket.chat.io (under development)
 - Transmission
 
-## Utilisation
+## Use
 
-Pour utiliser le script, vous devez d'abord donner les droits d'exécution au fichier avec la commande suivante :
+To use the script, you must first give execute rights to the file with the following command:
 
 ```bash
 sudo chmod +x init.sh
 ```
 
-Ensuite, vous pouvez lancer le script avec la commande suivante :
+Then you can run the script with the following command:
 
 ```bash
 sudo ./init.sh
 ```
 
-Le script vous guidera à travers les étapes et vous posera des questions pour configurer les containers que vous souhaitez générer.
+The script will walk you through the steps and ask you questions to configure the containers you want to generate.
 
-## Utilisation des scripts individuels
+## Using individual scripts
 
-Si vous n'avez besoin que d'un ou plusieurs containers et que vous avez déjà préparé votre environnement Linux avec Docker, vous pouvez simplement lancer un script individuel.
-Pour ce faire, ouvrez un terminal dans le dossier "scripts/" et donnez les droits d'exécution au script shell que vous voulez exécuter avec la commande suivante :
+If you only need one or more containers and you have already prepared your Linux environment with Docker, you can simply run an individual script.
+To do this, open a terminal in the "scripts/" folder and give execution rights to the shell script you want to run with the following command:
 
 ```bash
 sudo chmod +x nextcloud.sh
 ```
 
-Ensuite, vous pouvez lancer le script avec la commande suivante :
+Then you can run the script with the following command:
 
 ```bash
 sudo ./nextcloud.sh
 ```
 
-Le script démarrera automatiquement le container et vous n'aurez plus qu'à attendre pour profiter de votre nouveau container.
+The script will automatically start the container and you will just have to wait to enjoy your new container.
