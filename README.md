@@ -47,3 +47,6 @@ sudo ./nextcloud.sh
 ```
 
 The script will automatically start the container and you will just have to wait to enjoy your new container.
+
+
+[!["Buy Me A Beer"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/leonardofod)
